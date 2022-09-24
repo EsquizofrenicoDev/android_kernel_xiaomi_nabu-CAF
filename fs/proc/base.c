@@ -1133,7 +1133,7 @@ static int __set_oom_adj(struct file *file, int oom_adj, bool legacy)
 		rcu_read_unlock();
 		mmdrop(mm);
 	}
-	io_wakeup_process();
+	//io_wakeup_process();
 err_unlock:
 	mutex_unlock(&oom_adj_mutex);
 	put_task_struct(task);
