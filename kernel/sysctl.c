@@ -385,13 +385,6 @@ static struct ctl_table kern_table[] = {
 		.extra2		= &one,
 	},
 	{
-		.procname	= "mi_iolimit",
-		.data		= &sysctl_mi_iolimit,
-		.maxlen		= sizeof(unsigned int),
-		.mode		= 0644,
-		.proc_handler	= mi_iolimit_handler,
-	},
-	{
 		.procname	= "sched_conservative_pl",
 		.data		= &sysctl_sched_conservative_pl,
 		.maxlen		= sizeof(unsigned int),
