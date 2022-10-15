@@ -2853,6 +2853,42 @@ static const struct bpf_func_proto bpf_skb_get_tunnel_opt_proto = {
 	.arg3_type	= ARG_CONST_SIZE,
 };
 
+/*#if IS_ENABLED(CONFIG_MIHW)
+static u64 hash_string(const char *str)
+{
+	u64 hash = 5381;
+	int c;
+
+	while ((c = *str++))
+		hash = ((hash << 5) + hash) + c;
+
+	return hash;
+}
+
+BPF_CALL_1(bpf_get_comm_hash_from_sk, struct sk_buff *, skb)
+{
+	struct task_struct *p_task = NULL;
+	struct sock *sk = sk_to_full_sk(skb->sk);
+	u64 hash = -1;
+	pid_t pid = sk->pid_num;
+	rcu_read_lock();
+	p_task = find_task_by_pid_ns(pid, &init_pid_ns);
+	if (p_task) {
+		get_task_struct(p_task);
+		hash = hash_string(p_task->comm);
+		put_task_struct(p_task);
+	}
+	rcu_read_unlock();
+	return hash;
+}
+#else
+BPF_CALL_1(bpf_get_comm_hash_from_sk, struct sk_buff *, skb)
+{
+	return 0;
+}
+#endif
+*/
+
 static struct metadata_dst __percpu *md_dst;
 
 BPF_CALL_4(bpf_skb_set_tunnel_key, struct sk_buff *, skb,
@@ -3175,6 +3211,7 @@ static const struct bpf_func_proto bpf_setsockopt_proto = {
  * simple hash function for a string,
  * http://www.cse.yorku.ca/~oz/hash.html
  */
+#if IS_ENABLED(CONFIG_MIHW)
 static u64 hash_string(const char *str)
 {
 	u64 hash = 5381;
@@ -3202,6 +3239,12 @@ BPF_CALL_1(bpf_get_comm_hash_from_sk, struct sk_buff *, skb)
 	rcu_read_unlock();
 	return hash;
 }
+#else
+BPF_CALL_1(bpf_get_comm_hash_from_sk, struct sk_buff *, skb)
+{
+        return 0;
+}
+#endif
 
 static const struct bpf_func_proto bpf_get_comm_hash_from_sk_proto = {
 	.func           = bpf_get_comm_hash_from_sk,
@@ -3262,8 +3305,10 @@ sk_filter_func_proto(enum bpf_func_id func_id)
 		return &bpf_get_socket_cookie_proto;
 	case BPF_FUNC_get_socket_uid:
 		return &bpf_get_socket_uid_proto;
+	#if IS_ENABLED(CONFIG_MIHW)
 	case BPF_FUNC_get_comm_hash_from_sk:
 		return &bpf_get_comm_hash_from_sk_proto;
+	#endif
 	default:
 		return bpf_base_func_proto(func_id);
 	}
