@@ -3,6 +3,7 @@
  * Key setup for v1 encryption policies
  *
  * Copyright 2015, 2019 Google LLC
+ * Copyright (C) 2021 XiaoMi, Inc.
  */
 
 /*
@@ -314,25 +315,6 @@ static int setup_v1_file_key_derived(struct fscrypt_info *ci,
 					  FSCRYPT_MODE_PRIVATE) &&
 					  fscrypt_using_inline_encryption(ci)) {
 		ci->ci_owns_key = true;
-		if (ci->ci_policy.v1.flags &
-		    FSCRYPT_POLICY_FLAG_IV_INO_LBLK_32) {
-			union {
-				siphash_key_t k;
-				u8 bytes[SHA256_DIGEST_SIZE];
-			} ino_hash_key;
-			int err;
-
-			/* hashed_ino = SipHash(key=SHA256(master_key),
-			 * data=i_ino)
-			 */
-			err = fscrypt_do_sha256(raw_master_key,
-						ci->ci_mode->keysize / 2,
-						ino_hash_key.bytes);
-			if (err)
-				return err;
-			ci->ci_hashed_ino = siphash_1u64(ci->ci_inode->i_ino,
-							 &ino_hash_key.k);
-		}
 		memcpy(key_new.bytes, raw_master_key, ci->ci_mode->keysize);
 
 		for (i = 0; i < ARRAY_SIZE(key_new.words); i++)

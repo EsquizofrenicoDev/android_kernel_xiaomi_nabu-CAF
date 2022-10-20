@@ -3,6 +3,7 @@
  * fs/f2fs/checkpoint.c
  *
  * Copyright (c) 2012 Samsung Electronics Co., Ltd.
+ * Copyright (C) 2021 XiaoMi, Inc.
  *             http://www.samsung.com/
  */
 #include <linux/fs.h>
@@ -1267,8 +1268,8 @@ void f2fs_wait_on_all_pages(struct f2fs_sb_info *sbi, int type)
 			break;
 
 		if (type == F2FS_DIRTY_META)
-			f2fs_sync_meta_pages(sbi, META, LONG_MAX,
-							FS_CP_META_IO);
+			f2fs_sync_meta_pages(sbi, META, LONG_MAX,FS_CP_META_IO);
+
 		io_schedule_timeout(DEFAULT_IO_TIMEOUT);
 	}
 	finish_wait(&sbi->cp_wait, &wait);
@@ -1575,6 +1576,12 @@ int f2fs_write_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
 	}
 
 	trace_f2fs_write_checkpoint(sbi->sb, cpc->reason, "start block_ops");
+
+	/*
+	 * checkpoint will maintain the xattr consistency of dirs,
+	 * so we can remove them from tracking list when do_checkpoint
+	 */
+	f2fs_clear_xattr_set_ilist(sbi);
 
 	err = block_operations(sbi);
 	if (err)

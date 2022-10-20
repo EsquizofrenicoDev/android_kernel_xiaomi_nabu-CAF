@@ -1,4 +1,5 @@
-/* Copyright (c) 2014-2020,2021 The Linux Foundation. All rights reserved.
+/* Copyright (c) 2014-2020, The Linux Foundation. All rights reserved.
+ * Copyright (C) 2021 XiaoMi, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -65,8 +66,6 @@
 
 #define ICE_CRYPTO_CXT_FDE 1
 #define ICE_CRYPTO_CXT_FBE 2
-
-#define ICE_FDE_KEY_INDEX 31
 
 static int ice_fde_flag;
 struct ice_clk_info {

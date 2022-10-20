@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0
 /*
  * Copyright (C) 2017 Google, Inc.
+ * Copyright (C) 2021 XiaoMi, Inc.
  */
 
 #include <linux/blk-crypto.h>
@@ -124,7 +125,7 @@ static int default_key_ctr_optional(struct dm_target *ti,
 			iv_large_sectors = true;
 		} else if (!strcmp(opt_string, "wrappedkey_v0")) {
 			dkc->is_hw_wrapped = true;
-		} else if (!strcmp(opt_string, "set_dun") && is_legacy) {
+		} else if (!strcmp(opt_string, "set_dun")) {
 			dkc->set_dun = true;
 		} else {
 			ti->error = "Invalid feature arguments";
