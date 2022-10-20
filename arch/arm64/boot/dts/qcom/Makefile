@@ -1,4 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0
+ifeq (,,)
 ifeq ($(TARGET_BOARD_TYPE),auto)
 ifeq ($(CONFIG_BUILD_ARM64_DT_OVERLAY),y)
 	dtbo-$(CONFIG_ARCH_SM8150) += \
@@ -125,14 +126,26 @@ dtb-$(CONFIG_ARCH_QCS405) += qcs405-iot-sku1.dtb \
 ifeq ($(CONFIG_BUILD_ARM64_DT_OVERLAY),y)
 	dtbo-$(CONFIG_ARCH_SM8150) += \
 		sm8150-mtp-overlay.dtbo \
-		vayu-sm8150-overlay.dtbo \
 		nabu-sm8150-overlay.dtbo \
 		sm8150-rumi-overlay.dtbo \
+		sm8150-qrd-overlay.dtbo \
+		sm8150-qrd-dvt-overlay.dtbo \
+		sm8150-sdx50m-cdp-overlay.dtbo \
+		sm8150-sdx50m-mtp-overlay.dtbo \
+		sm8150-sdx50m-mtp-2.5k-panel-overlay.dtbo \
+		sm8150-sdx50m-qrd-overlay.dtbo \
+		sm8150-sdxprairie-cdp-overlay.dtbo \
+		sm8150-sdxprairie-mtp-overlay.dtbo \
+		sm8150-sdxprairie-v2-cdp-overlay.dtbo \
+		sm8150-sdxprairie-v2-mtp-overlay.dtbo \
+		sm8150-sdxprairie-v3-mtp-overlay.dtbo \
+		sm8150-marmot-cdp-overlay.dtbo \
+		sm8150-marmot-mtp-overlay.dtbo \
 		sm8150-hdk-overlay.dtbo
 
 
+sm8150-cdp-overlay.dtbo-base := sm8150.dtb sm8150-v2.dtb sm8150p.dtb sm8150p-v2.dtb
 sm8150-mtp-overlay.dtbo-base := sm8150.dtb sm8150-v2.dtb sm8150p.dtb sm8150p-v2.dtb
-vayu-sm8150-overlay.dtbo-base := sm8150.dtb sm8150-v2.dtb sm8150p.dtb sm8150p-v2.dtb
 nabu-sm8150-overlay.dtbo-base := sm8150.dtb sm8150-v2.dtb sm8150p.dtb sm8150p-v2.dtb
 andromeda-sm8150-overlay.dtbo-base := sm8150.dtb sm8150-v2.dtb sm8150p.dtb sm8150p-v2.dtb
 andromeda-sm8150-p1-overlay.dtbo-base := sm8150.dtb sm8150-v2.dtb sm8150p.dtb sm8150p-v2.dtb
@@ -144,6 +157,18 @@ andromeda-sm8150-p2_21-overlay.dtbo-base := sm8150.dtb sm8150-v2.dtb sm8150p.dtb
 andromeda-sm8150-p2_22-overlay.dtbo-base := sm8150.dtb sm8150-v2.dtb sm8150p.dtb sm8150p-v2.dtb
 sm8150-rumi-overlay.dtbo-base := sm8150.dtb sm8150-v2.dtb sm8150p.dtb sm8150p-v2.dtb
 sm8150-hdk-overlay.dtbo-base := sm8150.dtb sm8150-v2.dtb sm8150p.dtb sm8150p-v2.dtb
+sm8150-qrd-dvt-overlay.dtbo-base := sm8150-v2.dtb sm8150p-v2.dtb
+sm8150-sdx50m-cdp-overlay.dtbo-base := sm8150.dtb sm8150-v2.dtb sm8150p.dtb sm8150p-v2.dtb
+sm8150-sdx50m-mtp-overlay.dtbo-base := sm8150.dtb sm8150-v2.dtb sm8150p.dtb sm8150p-v2.dtb
+sm8150-sdx50m-mtp-2.5k-panel-overlay.dtbo-base := sm8150.dtb sm8150-v2.dtb sm8150p.dtb sm8150p-v2.dtb
+sm8150-sdx50m-qrd-overlay.dtbo-base := sm8150.dtb sm8150-v2.dtb sm8150p.dtb sm8150p-v2.dtb
+sm8150-sdxprairie-cdp-overlay.dtbo-base := sm8150.dtb sm8150-v2.dtb sm8150p.dtb sm8150p-v2.dtb
+sm8150-sdxprairie-mtp-overlay.dtbo-base := sm8150.dtb sm8150-v2.dtb sm8150p.dtb sm8150p-v2.dtb
+sm8150-sdxprairie-v2-cdp-overlay.dtbo-base := sm8150.dtb sm8150-v2.dtb sm8150p.dtb sm8150p-v2.dtb
+sm8150-sdxprairie-v2-mtp-overlay.dtbo-base := sm8150.dtb sm8150-v2.dtb sm8150p.dtb sm8150p-v2.dtb
+sm8150-sdxprairie-v3-mtp-overlay.dtbo-base := sm8150.dtb sm8150-v2.dtb sm8150p.dtb sm8150p-v2.dtb
+sm8150-marmot-cdp-overlay.dtbo-base := sm8150.dtb sm8150-v2.dtb sm8150p.dtb sm8150p-v2.dtb
+sm8150-marmot-mtp-overlay.dtbo-base := sm8150.dtb sm8150-v2.dtb sm8150p.dtb sm8150p-v2.dtb
 else
 dtb-$(CONFIG_ARCH_SM8150)	+= sm8150-rumi.dtb \
 	sm8150-mtp.dtb \
@@ -324,6 +349,7 @@ ifeq ($(CONFIG_BUILD_ARM64_DT_OVERLAY),y)
 		trinket-usbc-external-codec-idp-overlay.dtbo \
 		trinket-usbc-idp-overlay.dtbo \
 		trinket-dp-idp-overlay.dtbo \
+		trinket-facepay-overlay.dtbo \
 		trinket-iot-idp-overlay.dtbo \
 		trinketp-iot-idp-overlay.dtbo \
 		trinket-iot-external-codec-idp-overlay.dtbo \
@@ -342,6 +368,7 @@ trinket-external-codec-idp-overlay.dtbo-base := trinket.dtb
 trinket-usbc-external-codec-idp-overlay.dtbo-base := trinket.dtb
 trinket-usbc-idp-overlay.dtbo-base := trinket.dtb
 trinket-dp-idp-overlay.dtbo-base := trinket.dtb
+trinket-facepay-overlay.dtbo-base := trinket-iot.dtb
 trinket-iot-idp-overlay.dtbo-base := trinket-iot.dtb
 trinketp-iot-idp-overlay.dtbo-base := trinketp-iot.dtb
 trinket-iot-external-codec-idp-overlay.dtbo-base := trinket-iot.dtb
@@ -551,6 +578,11 @@ dtb-$(CONFIG_ARCH_SDM429W) += sdm429-wtp.dtb\
 endif
 
 endif
+
+endif
+
+dtbo-y := nabu-sm8150-overlay.dtbo
+nabu-sm8150-overlay.dtbo-base := sm8150.dtb sm8150-v2.dtb sm8150p.dtb sm8150p-v2.dtb
 
 ifeq ($(CONFIG_ARM64),y)
 always		:= $(dtb-y)
