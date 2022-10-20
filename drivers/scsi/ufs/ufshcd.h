@@ -312,6 +312,7 @@ struct ufs_pwr_mode_info {
 	struct ufs_pa_layer_attr info;
 };
 
+
 union ufs_crypto_cfg_entry;
 
 /**
@@ -1271,6 +1272,13 @@ static inline int ufshcd_dme_peer_st_set(struct ufs_hba *hba, u32 attr_sel,
 {
 	return ufshcd_dme_set_attr(hba, attr_sel, ATTR_SET_ST,
 				   mib_val, DME_PEER);
+}
+
+static inline unsigned int ufshcd_vops_get_user_cap_mode(struct ufs_hba *hba)
+{
+	if (hba->var && hba->var->vops->get_user_cap_mode)
+		return hba->var->vops->get_user_cap_mode(hba);
+	return 0;
 }
 
 static inline int ufshcd_dme_get(struct ufs_hba *hba,

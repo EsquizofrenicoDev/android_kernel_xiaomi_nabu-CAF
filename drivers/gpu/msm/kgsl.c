@@ -2374,7 +2374,7 @@ static int check_vma(unsigned long hostptr, u64 size)
 	return true;
 }
 
-static int memdesc_sg_virt(struct kgsl_memdesc *memdesc)
+/*static int memdesc_sg_virt(struct kgsl_memdesc *memdesc)
 {
 	int ret = 0;
 	long npages = 0, i;
@@ -2428,7 +2428,63 @@ out:
 	}
 	kgsl_free(pages);
 	return ret;
+}*/
+
+static int memdesc_sg_virt(struct kgsl_memdesc *memdesc, unsigned long useraddr)
+{
+	int ret = 0;
+	long npages = 0, i;
+	size_t sglen = (size_t) (memdesc->size / PAGE_SIZE);
+	struct page **pages = NULL;
+	int write = ((memdesc->flags & KGSL_MEMFLAGS_GPUREADONLY) ? 0 :
+								FOLL_WRITE);
+
+	if (sglen == 0 || sglen >= LONG_MAX)
+		return -EINVAL;
+
+	pages = kgsl_malloc(sglen * sizeof(struct page *));
+	if (pages == NULL)
+		return -ENOMEM;
+
+	memdesc->sgt = kmalloc(sizeof(struct sg_table), GFP_KERNEL);
+	if (memdesc->sgt == NULL) {
+		ret = -ENOMEM;
+		goto out;
+	}
+
+	down_read(&current->mm->mmap_sem);
+	if (!check_vma(useraddr, memdesc->size)) {
+		up_read(&current->mm->mmap_sem);
+		ret = -EFAULT;
+		goto out;
+	}
+
+	npages = get_user_pages(useraddr, sglen, write, pages, NULL);
+	up_read(&current->mm->mmap_sem);
+
+	ret = (npages < 0) ? (int)npages : 0;
+	if (ret)
+		goto out;
+
+	if ((unsigned long) npages != sglen) {
+		ret = -EINVAL;
+		goto out;
+	}
+
+	ret = sg_alloc_table_from_pages(memdesc->sgt, pages, npages,
+					0, memdesc->size, GFP_KERNEL);
+out:
+	if (ret) {
+		for (i = 0; i < npages; i++)
+			put_page(pages[i]);
+
+		kfree(memdesc->sgt);
+		memdesc->sgt = NULL;
+	}
+	kgsl_free(pages);
+	return ret;
 }
+
 
 static struct kgsl_memdesc_ops kgsl_usermem_ops = {
 	.free = kgsl_destroy_anon,
@@ -2439,7 +2495,6 @@ static int kgsl_setup_anon_useraddr(struct kgsl_pagetable *pagetable,
 	size_t offset, size_t size)
 {
 	/* Map an anonymous memory chunk */
-	int ret;
 
 	int ret;
 
@@ -2464,7 +2519,7 @@ static int kgsl_setup_anon_useraddr(struct kgsl_pagetable *pagetable,
 		entry->memdesc.gpuaddr = (uint64_t) hostptr;
 	}
 
-	ret = memdesc_sg_virt(&entry->memdesc);
+	ret = memdesc_sg_virt(&entry->memdesc,hostptr);
 
 	if (ret && kgsl_memdesc_use_cpu_map(&entry->memdesc))
 		kgsl_mmu_put_gpuaddr(&entry->memdesc);

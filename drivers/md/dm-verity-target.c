@@ -66,11 +66,11 @@ struct buffer_aux {
 /*
  * While system shutdown, skip verity work for I/O error.
  */
-static inline bool verity_is_system_shutting_down(void)
+/*static inline bool verity_is_system_shutting_down(void)
 {
 	return system_state == SYSTEM_HALT || system_state == SYSTEM_POWER_OFF
 		|| system_state == SYSTEM_RESTART;
-}
+}*/
 
 /*
  * Initialize struct buffer_aux for a freshly created buffer.

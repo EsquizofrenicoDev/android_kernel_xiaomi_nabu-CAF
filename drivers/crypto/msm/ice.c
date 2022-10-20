@@ -29,6 +29,8 @@
 #include <linux/atomic.h>
 #include <linux/wait.h>
 
+#define ICE_FDE_KEY_INDEX 31
+
 #define TZ_SYSCALL_CREATE_SMC_ID(o, s, f) \
 	((uint32_t)((((o & 0x3f) << 24) | (s & 0xff) << 8) | (f & 0xff)))
 

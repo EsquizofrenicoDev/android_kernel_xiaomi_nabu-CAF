@@ -7,6 +7,7 @@
 #
 
 KERNEL_ROOT_DIR=$(pwd)
+export DTC_EXT=dtc
 TARGET_ARCH="arm64"
 [[ -f "$KERNEL_ROOT_DIR/arch/$TARGET_ARCH/configs/nabu_defconfig" ]] && \
 KERNEL_CONFIG="nabu_defconfig" \
@@ -643,7 +644,7 @@ build() {
 
 	BUILD_START=$(date +"%s")
 
-	MAKEOPTS="CONFIG_DEBUG_SECTION_MISMATCH=y $MAKEOPTS"
+	MAKEOPTS="CONFIG_DEBUG_SECTION_MISMATCH=y LLVM_IAS=1  $MAKEOPTS"
 	if [[ $BUILD_DTBO_IMG == "1" || ${1} == "dtbs"  ]]; then
 		MAKEOPTS="CONFIG_BUILD_ARM64_DT_OVERLAY=y $MAKEOPTS"
 	fi

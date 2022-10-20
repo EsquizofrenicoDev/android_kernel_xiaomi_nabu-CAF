@@ -1207,8 +1207,7 @@ static void __map_bio(struct dm_target_io *tio)
 	r = ti->type->map(ti, clone);
 	dm_offload_end(&o);
 
-	if (sysctl_mi_iolimit &&
-			NULL != tio->clone.bi_disk->queue && NULL != tio->io->md->queue) {
+	if (tio->clone.bi_disk->queue && NULL != tio->io->md->queue) {
 		io_stime = atomic64_read(&tio->clone.bi_disk->queue->io_stime);
 		io_wtime = atomic64_read(&tio->clone.bi_disk->queue->io_wtime);
 		atomic64_set(&tio->io->md->queue->io_stime, io_stime);

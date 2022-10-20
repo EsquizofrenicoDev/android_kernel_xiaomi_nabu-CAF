@@ -30,6 +30,22 @@ union fscrypt_context;
 struct fscrypt_info;
 struct seq_file;
 
+struct fscrypt_dummy_context {
+	const union fscrypt_context *ctx;
+};
+
+int fscrypt_set_test_dummy_encryption(struct super_block *sb,
+				      const substring_t *arg,
+				      struct fscrypt_dummy_context *dummy_ctx);
+void fscrypt_show_test_dummy_encryption(struct seq_file *seq, char sep,
+					struct super_block *sb);
+static inline void
+fscrypt_free_dummy_context(struct fscrypt_dummy_context *dummy_ctx)
+{
+	kfree(dummy_ctx->ctx);
+	dummy_ctx->ctx = NULL;
+}
+
 struct fscrypt_str {
 	unsigned char *name;
 	u32 len;

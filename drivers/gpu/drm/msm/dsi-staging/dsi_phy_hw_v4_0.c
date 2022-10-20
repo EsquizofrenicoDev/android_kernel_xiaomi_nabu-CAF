@@ -144,6 +144,10 @@ static void dsi_phy_hw_v4_0_lane_settings(struct dsi_phy_hw *phy,
 		DSI_W32(phy, DSIPHY_LNX_PIN_SWAP(i),
 					(cfg->lane_pnswap >> i) & 0x1);
 	}
+
+	if (cfg->phy_type == DSI_PHY_TYPE_CPHY)
+		DSI_W32(phy, DSIPHY_LNX_TX_DCTRL(3), 0x02);
+
 }
 #else
 static void dsi_phy_hw_v4_0_lane_settings(struct dsi_phy_hw *phy,
