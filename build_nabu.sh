@@ -36,7 +36,7 @@ TOOLCHAIN="3"               #
 #############################
 
 USE_UNCOMPRESSED_KERNEL="1"
-DISABLE_LLD="1"
+DISABLE_LLD="0"
 DISABLE_IAS="0"
 DISABLE_LLD_IAS="0"
 USE_LLVM_TOOLS="0"
